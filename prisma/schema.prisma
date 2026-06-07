@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum MaritalStatus {
+  NEVER_MARRIED
+  DIVORCED
+  WIDOWED
+  SEPARATED
+}
+
+enum YesNoMaybe {
+  YES
+  NO
+  MAYBE
+}
+
+enum FamilyType {
+  NUCLEAR
+  JOINT
+}
+
+enum DietaryPreference {
+  VEG
+  NON_VEG
+  JAIN
+  EGGETARIAN
+}
+
+enum DrinkingStatus {
+  YES
+  NO
+  OCCASIONALLY
+}
+
+enum SmokingStatus {
+  YES
+  NO
+  OCCASIONALLY
+}
+
+enum ClientStatus {
+  ONBOARDED
+  ACTIVE
+  MATCH_SENT
+  MUTUAL_INTEREST
+  MEETING_SCHEDULED
+  CLOSED_WON
+  CLOSED_LOST
+}
+
+enum AILabel {
+  DREAM
+  HIGH
+  COMPATIBLE
+  LOW
+}
+
+enum MatchStatus {
+  SENT
+  INTERESTED
+  NOT_INTERESTED
+  MEETING_SCHEDULED
+}
+
+model Matchmaker {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("matchmaker")
+  createdAt    DateTime @default(now())
+  
+  clients      Client[]
+  notes        Note[]
+}
+
+model Client {
+  id                  String            @id @default(cuid())
+  firstName           String
+  lastName            String
+  gender              Gender
+  dateOfBirth         DateTime
+  country             String
+  city                String
+  height              Int               // in cm
+  email               String            @unique
+  phone               String
+  undergradCollege    String
+  degree              String
+  income              Int               // annual in INR
+  currentCompany      String
+  designation         String
+  maritalStatus       MaritalStatus
+  languagesKnown      String[]
+  siblings            Int
+  caste               String
+  religion            String
+  wantKids            YesNoMaybe
+  openToRelocate      YesNoMaybe
+  openToPets          YesNoMaybe
+  familyType          FamilyType
+  motherTongue        String
+  dietaryPreference   DietaryPreference
+  drinking            DrinkingStatus
+  smoking             SmokingStatus
+  horoscopeRequired   Boolean
+  nriStatus           Boolean
+  photoUrl            String?           // S3 URL
+  bio                 String?           @db.Text
+  status              ClientStatus      @default(ACTIVE)
+  assignedMatchmakerId String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  
+  assignedMatchmaker  Matchmaker        @relation(fields: [assignedMatchmakerId], references: [id])
+  matches             Match[]           @relation("ClientMatches")
+  matchedWith         Match[]           @relation("MatchedWithClient")
+  notes               Note[]
+  
+  @@index([assignedMatchmakerId])
+  @@index([status])
+  @@index([gender])
+}
+
+model Match {
+  id                  String       @id @default(cuid())
+  clientId            String
+  matchedWithId       String
+  aiScore             Int          // 0-100
+  aiLabel             AILabel
+  aiExplanation       String       @db.Text
+  aiIntroEmail        String?      @db.Text
+  status              MatchStatus  @default(SENT)
+  magicToken          String?      @unique
+  magicTokenExpiresAt DateTime?
+  sentAt              DateTime?
+  respondedAt         DateTime?
+  createdAt           DateTime     @default(now())
+  
+  client              Client       @relation("ClientMatches", fields: [clientId], references: [id])
+  matchedWith         Client       @relation("MatchedWithClient", fields: [matchedWithId], references: [id])
+  
+  @@index([clientId])
+  @@index([matchedWithId])
+  @@index([magicToken])
+  @@index([status])
+}
+
+model Note {
+  id            String      @id @default(cuid())
+  clientId      String
+  matchmakerId  String
+  content       String      @db.Text
+  createdAt     DateTime    @default(now())
+  
+  client        Client      @relation(fields: [clientId], references: [id])
+  matchmaker    Matchmaker  @relation(fields: [matchmakerId], references: [id])
+  
+  @@index([clientId])
+  @@index([matchmakerId])
+}
