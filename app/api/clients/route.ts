@@ -12,7 +12,7 @@ const createClientSchema = z.object({
     const age = new Date().getFullYear() - dob.getFullYear();
     return age >= 18 && age <= 60;
   }, 'Age must be between 18 and 60'),
-  maritalStatus: z.enum(['NEVER_MARRIED', 'DIVORCED', 'WIDOWED']),
+  maritalStatus: z.enum(['NEVER_MARRIED', 'DIVORCED', 'WIDOWED', 'SEPARATED']),
   motherTongue: z.string().min(1),
   country: z.string().default('India'),
   city: z.string().min(1, 'City is required'),
