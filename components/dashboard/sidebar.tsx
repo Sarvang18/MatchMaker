@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Heart, LayoutDashboard, Users, Settings, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { getInitials, getInitialsColor } from '@/lib/client-utils';
+import { getInitials } from '@/lib/client-utils';
 
 export function Sidebar() {
   const pathname = usePathname();

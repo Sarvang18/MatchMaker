@@ -19,7 +19,6 @@ import type { ClientSummary, ClientStatus, Gender } from '@/types';
 import {
   calculateAge,
   getInitials,
-  getInitialsColor,
   getStatusColor,
   getStatusLabel,
 } from '@/lib/client-utils';
@@ -130,7 +129,7 @@ export function ClientList({ clients }: ClientListProps) {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedClients.map((client, index) => (
+              paginatedClients.map((client) => (
                 <TableRow
                   key={client.id}
                   className="cursor-pointer hover:bg-red-50/50 transition-all duration-300 border-b border-gray-50 group"

@@ -9,7 +9,6 @@ import type { ClientSummary, ClientStatus } from '@/types';
 import {
   calculateAge,
   getInitials,
-  getInitialsColor,
 } from '@/lib/client-utils';
 import { ToastContainer, useToast } from '@/components/ui/toast';
 
@@ -70,7 +69,7 @@ export function KanbanBoard({ clients: initialClients, onClientUpdate }: KanbanB
       });
 
       onClientUpdate(clientId, newStatus);
-    } catch (error) {
+    } catch {
       // Revert optimistic update
       setClients(initialClients);
       showToast({

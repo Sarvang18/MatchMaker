@@ -93,8 +93,8 @@ export function SendMatchModal({ isOpen, onClose, match }: SendMatchModalProps) 
       const data = await response.json();
       setIntroEmail(data.introEmail);
       setEmailReady(true);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to generate email');
       // Use fallback
       setIntroEmail(`Dear ${match.client.firstName},
 
@@ -130,8 +130,8 @@ The Date Crew Team`);
       router.refresh();
       onClose();
       // Show success toast (handled by parent)
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send match');
     } finally {
       setIsSending(false);
     }
