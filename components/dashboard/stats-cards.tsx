@@ -1,4 +1,4 @@
-import { Users, UserCheck, Send, Trophy, TrendingUp, Heart } from 'lucide-react';
+import { Users, UserCheck, Send, Trophy, TrendingUp } from 'lucide-react';
 
 interface StatsCardsProps {
   totalClients: number;

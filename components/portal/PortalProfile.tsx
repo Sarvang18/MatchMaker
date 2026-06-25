@@ -50,7 +50,7 @@ export function PortalProfile({
 }: PortalProfileProps) {
   const [responded, setResponded] = useState(alreadyResponded);
   const [response, setResponse] = useState<'INTERESTED' | 'NOT_INTERESTED' | null>(
-    alreadyResponded ? (responseStatus as any) : null
+    alreadyResponded ? (responseStatus as 'INTERESTED' | 'NOT_INTERESTED') : null
   );
 
   const age = calculateAge(candidate.dateOfBirth);
@@ -71,7 +71,7 @@ export function PortalProfile({
         const data = await res.json();
         alert(data.error || 'Something went wrong');
       }
-    } catch (error) {
+    } catch {
       alert('Network error. Please try again.');
     }
   };
